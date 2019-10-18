@@ -1,21 +1,21 @@
 from __future__ import absolute_import
-
+from typing import Optional
 from collections import OrderedDict
 from inspect import cleandoc
 
 __all__ = ["merge_google_napoleon_docs", "merge_numpy_napoleon_docs"]
 
 
-def parse_napoleon_doc(doc, style):
+def parse_napoleon_doc(doc: Optional[str], style: str) -> OrderedDict:
     """ Extract the text from the various sections of a numpy-formatted docstring.
 
     Parameters
     ----------
-    doc: Union[str, None]
+    doc: Optional[str]
         The docstring to parse.
 
     style: str
-        'google' or 'numpy'
+        "google" or "numpy"
 
     Returns
     -------
@@ -87,7 +87,7 @@ def parse_napoleon_doc(doc, style):
     return doc_sections
 
 
-def merge_section(key, prnt_sec, child_sec, style):
+def merge_section(key: str, prnt_sec: Optional[str], child_sec: Optional[str], style):
     """ Synthesize a output napoleon docstring section.
 
     Parameters
@@ -98,6 +98,9 @@ def merge_section(key, prnt_sec, child_sec, style):
         The docstring section from the parent's attribute.
     child_sec: Optional[str]
         The docstring section from the child's attribute.
+    style : str
+        "google" or "numpy"
+
     Returns
     -------
     Optional[str]
@@ -120,13 +123,15 @@ def merge_section(key, prnt_sec, child_sec, style):
     return header + body
 
 
-def merge_all_sections(prnt_sctns, child_sctns, style):
+def merge_all_sections(prnt_sctns: OrderedDict, child_sctns: OrderedDict, style: str) -> str:
     """ Merge the doc-sections of the parent's and child's attribute into a single docstring.
 
     Parameters
     ----------
     prnt_sctns: OrderedDict[str, Union[None,str]]
     child_sctns: OrderedDict[str, Union[None,str]]
+    style: str
+        "google" or "numpy"
 
     Returns
     -------
@@ -147,7 +152,7 @@ def merge_all_sections(prnt_sctns, child_sctns, style):
     return "\n\n".join(doc) if doc else None
 
 
-def merge_numpy_napoleon_docs(prnt_doc=None, child_doc=None):
+def merge_numpy_napoleon_docs(prnt_doc: Optional[str] = None, child_doc: Optional[str] = None) -> Optional[str]:
     """ Merge two numpy-style docstrings into a single docstring, according to napoleon docstring sections.
 
     Given the numpy-style docstrings from a parent and child's attributes, merge the docstring
@@ -168,7 +173,7 @@ def merge_numpy_napoleon_docs(prnt_doc=None, child_doc=None):
 
     Returns
     -------
-    Union[str, None]
+    Optional[str]
         The merged docstring. """
     style = "numpy"
     return merge_all_sections(
@@ -176,7 +181,7 @@ def merge_numpy_napoleon_docs(prnt_doc=None, child_doc=None):
     )
 
 
-def merge_google_napoleon_docs(prnt_doc=None, child_doc=None):
+def merge_google_napoleon_docs(prnt_doc: Optional[str] = None, child_doc: Optional[str] = None):
     """ Merge two google-style docstrings into a single docstring, according to napoleon docstring sections.
 
         Given the google-style docstrings from a parent and child's attributes, merge the docstring
